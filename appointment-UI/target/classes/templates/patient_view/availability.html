@@ -1,0 +1,138 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en" xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <meta charset="ISO-8859-1">-->
+<!--    <title>Doctor Availability</title>-->
+<!--    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">-->
+
+<!--    <style>-->
+<!--        .available {-->
+<!--            color: green;-->
+<!--            font-weight: bold;-->
+<!--        }-->
+<!--        .unavailable {-->
+<!--            color: red;-->
+<!--            font-weight: bold;-->
+<!--        }-->
+<!--    </style>-->
+<!--</head>-->
+<!--<body>-->
+
+<!--<div class="container">-->
+<!--    <h1 class="mt-5 mb-4">Doctor's Availability for the Next 7 Days</h1>-->
+
+<!--    <table class="table table-bordered">-->
+<!--        <thead class="thead-dark">-->
+<!--        <tr>-->
+<!--            <th>Date</th>-->
+<!--            <th>Available Slots</th>-->
+<!--        </tr>-->
+<!--        </thead>-->
+<!--        <tbody>-->
+<!--        &lt;!&ndash; Iterate over the list of slots for each day &ndash;&gt;-->
+<!--        <tr th:each="daySlots : ${slotsForNext7Days}">-->
+<!--            &lt;!&ndash; Display the slot date &ndash;&gt;-->
+<!--            <td th:text="${#temporals.format(daySlots.slotDate, 'yyyy-MM-dd')}">Date</td>-->
+<!--            <td>-->
+<!--                <ul class="list-unstyled">-->
+<!--                    &lt;!&ndash; Iterate over the slots for each day &ndash;&gt;-->
+<!--                    <li th:each="slot : ${daySlots}">-->
+<!--                        &lt;!&ndash; Display time and availability status &ndash;&gt;-->
+<!--                        <span th:text="'Time: ' + ${#temporals.format(slot.slotTime, 'HH:mm')}">Time</span> - -->
+
+<!--                        &lt;!&ndash; Use conditional class to show availability status &ndash;&gt;-->
+<!--                        <span th:classappend="${slot.status == 'AVAILABLE'} ? 'available' : 'unavailable'"-->
+<!--                              th:text="'Status: ' + ${slot.status}"></span>-->
+<!--                    </li>-->
+<!--                </ul>-->
+<!--            </td>-->
+<!--        </tr>-->
+<!--        </tbody>-->
+<!--    </table>-->
+<!--</div>-->
+
+<!--</body>-->
+<!--</html>-->
+
+
+<!-- version-2 -->
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="ISO-8859-1">
+    <title>Doctor Availability</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        .available {
+            color: green;
+            font-weight: bold;
+        }
+        .unavailable {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1 class="mt-5 mb-4">Doctor's Availability for the Next 7 Days</h1>
+
+    <table class="table table-bordered">
+        <thead class="thead-dark">
+        <tr>
+            <th>Date</th>
+            <th>Available Slots</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Iterate over the list of slots for each day -->
+        <tr th:each="daySlots : ${slotsForNext7Days}">
+            <!-- Display the slot date -->
+            <td th:text="${#temporals.format(daySlots.slotDate, 'yyyy-MM-dd')}">Date</td>
+            <td>
+                <ul class="list-unstyled">
+                    <!-- Iterate over the slots for each day -->
+                    <li th:each="slot : ${daySlots}">
+                        <!-- Display time and availability status -->
+                        <span th:text="'Time: ' + ${#temporals.format(slot.slotTime, 'HH:mm')}">Time</span> -
+
+                        <span th:classappend="${slot.status == 'AVAILABLE'} ? 'available' : 'unavailable'"
+                              th:text="'Status: ' + ${slot.status}"></span>
+
+                        <!-- Book button aligned beside status -->
+                        <form th:action="@{/patient/book/{id} (id=${patient.id})}"
+                              th:object="${appointment}" method="POST"
+                              th:if="${slot.status == 'AVAILABLE'}" style="display: inline;">
+                            <input type="text" name="did" th:field="${appointment.did}" hidden="">
+                            <input type="date" name="date"
+                                   th:value="${#temporals.format(daySlots.slotDate, 'yyyy-MM-dd')}" hidden>
+                            <input type="time" name="time"
+                                   th:value="${#temporals.format(slot.slotTime, 'HH:mm')}" hidden>
+<!--                            <input type="date" name="date" class="form-control" th:field="${appointment.date}" id="appointmentDate" hidden="" value="">-->
+<!--                            <input name="time" class="form-control" th:field="${appointment.time}" id="timeSlot" hidden="">-->
+<!--                            <script>-->
+<!--                                document.querySelectorAll('input#appointmentDate').forEach(function(elem) {-->
+<!--                                    const currentDate = /*[[${#temporals.format(daySlots.slotDate, 'yyyy-MM-dd')}]]*/ 'default-date';-->
+<!--                                    elem.min = currentDate;  // Sets the min attribute for the date field-->
+<!--                                });-->
+<!--                            </script>-->
+<!--                            <input type="text" name="slotId" th:field="${slot.id}" hidden="">-->
+                            <button type="submit" class="btn btn-primary btn-sm ms-2">Book</button>
+                        </form>
+                    </li>
+                </ul>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>
+
+<!--version  2 -->
+
+
+
