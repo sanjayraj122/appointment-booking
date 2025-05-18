@@ -8,6 +8,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="micro-appointment" />
+        <module name="micro-auth" />
         <module name="micro-doctor" />
         <module name="student" />
         <module name="login-logout-service" />
@@ -30,6 +31,7 @@
       <module name="login-logout-service (1)" options="-parameters" />
       <module name="medication" options="-parameters" />
       <module name="micro-appointment" options="-parameters" />
+      <module name="micro-auth" options="-parameters" />
       <module name="micro-doctor" options="-parameters" />
       <module name="micro-mail" options="-parameters" />
       <module name="micro-medication" options="-parameters" />

@@ -9,22 +9,21 @@ import org.springframework.stereotype.Service;
 import com.login_logout.entity.UserDtls;
 import com.login_logout.repo.UserRepository;
 
+import java.util.Optional;
+
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
 	@Autowired
 	private UserRepository userRepo;
 
-	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
 		UserDtls user = userRepo.findByEmail(email);
-
-		if (user != null) {
-			return new CustomUserDetails(user);
+		if (user == null) {
+			throw new UsernameNotFoundException("User not found with email: " + email);
 		}
-
-		throw new UsernameNotFoundException("user not available");
+		return new CustomUserDetails(user);
 	}
 
 }

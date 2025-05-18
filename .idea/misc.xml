@@ -16,6 +16,7 @@
         <option value="$PROJECT_DIR$/micro-notification/pom.xml" />
         <option value="$PROJECT_DIR$/../../micro-mail 1/micro-mail/pom.xml" />
         <option value="$PROJECT_DIR$/micro-mail/pom.xml" />
+        <option value="$PROJECT_DIR$/micro-auth/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">

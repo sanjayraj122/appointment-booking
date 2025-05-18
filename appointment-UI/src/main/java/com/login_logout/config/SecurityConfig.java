@@ -1,12 +1,11 @@
 package com.login_logout.config;
 
-
-import java.util.Arrays;
-
+import com.login_logout.util.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -14,68 +13,70 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
 
 @SuppressWarnings("deprecation")
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-	@Autowired
-	public AuthenticationSuccessHandler CustomSuccesshandler;
-	
 
-	@Bean
-	public BCryptPasswordEncoder getPasswordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
-	@Bean
-	public UserDetailsService getUserDetailsService() {
-		return new UserDetailsServiceImpl();
-	}
+    public static final String[] PUBLIC_URLS = {
+            "/auth/**",
+            "/signin", "/register", "/registerDoctor",
+            "/css/**", "/js/**", "/", "/favicon.ico"};
+
+    @Autowired
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    @Autowired
+    private UserDetailsServiceImpl userDetailsService;
+
+    @Bean
+    public BCryptPasswordEncoder getPasswordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public UserDetailsService getUserDetailsService() {
+        return new UserDetailsServiceImpl();
+    }
 
 
-	@Bean
-	public DaoAuthenticationProvider getDaoAuthProvider() {
-		DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
-		daoAuthenticationProvider.setUserDetailsService(getUserDetailsService());
-		daoAuthenticationProvider.setPasswordEncoder(getPasswordEncoder());
+    @Bean
+    public DaoAuthenticationProvider getDaoAuthProvider() {
+        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
+        daoAuthenticationProvider.setUserDetailsService(userDetailsService);
+        daoAuthenticationProvider.setPasswordEncoder(getPasswordEncoder());
+        return daoAuthenticationProvider;
+    }
 
-		return daoAuthenticationProvider;
-	}
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.authenticationProvider(getDaoAuthProvider());
+    }
 
-	@Override
-	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.authenticationProvider(getDaoAuthProvider());
-	}
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+// .and().formLogin().loginPage("/signin").loginProcessingUrl("/login")
+        http.csrf().disable()
+                .authorizeRequests()
+                .antMatchers(PUBLIC_URLS).permitAll()
+                .antMatchers("/admin/**").hasRole("ADMIN")
+                .antMatchers("/user/**").hasRole("USER")
+                .antMatchers("/doctor/**").hasRole("DOCTOR")
+                .antMatchers("/patient/**").hasRole("PATIENT")
+                .antMatchers("/**").authenticated()
+                .anyRequest().authenticated()
+                .and()
+                .sessionManagement().disable(); // JWT is stateless
 
-	@Override
-	protected void configure(HttpSecurity http) throws Exception {
+        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+    }
 
-		http.authorizeRequests().antMatchers("/admin/**").hasRole("ADMIN").
-		antMatchers("/user/**").hasRole("USER").
-		antMatchers("/patient/**").access("hasRole('ROLE_PATIENT')").
-		antMatchers("/doctor/**").access("hasRole('ROLE_DOCTOR')")
-				.antMatchers("/**","/medication/**").permitAll().and().formLogin().loginPage("/signin").loginProcessingUrl("/login")
-				.successHandler(CustomSuccesshandler).and().csrf().disable();
-		
-
-	}
-	
-    @Bean   
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:8081")); //or add * to allow all origins
-        configuration.setAllowCredentials(true);
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")); //to set allowed http methods
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
-        configuration.setExposedHeaders(Arrays.asList("custom-header1", "custom-header2"));
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration); 
-        return source; 
+    @Bean
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
     }
 }
-	
-
