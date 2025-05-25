@@ -1,0 +1,59 @@
+server:
+  port: 7070
+
+spring:
+  application:
+    name: API-GATEWAY
+
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        - id: login-logout-service
+          uri: lb://LOGIN-LOGOUT-SERVICE
+          predicates:
+            - "Path=/login/**"
+            - "Path=/logout/**"
+            - "Path=/signin/**"
+          filters:
+            - "AuthenticationFilter"
+
+        - id: micro-appointment
+          uri: lb://MICRO-APPOINTMENT
+          predicates:
+            - "Path=/appointment/**"
+          filters:
+            - "AuthenticationFilter"
+
+        - id: micro-doctor
+          uri: lb://MICRO-DOCTOR
+          predicates:
+            - "Path=/doctor/**"
+
+        - id: micro-mail
+          uri: lb://MICRO-MAIL
+          predicates:
+            - "Path=/mail/**"
+
+        - id: micro-medication
+          uri: lb://MICRO-MEDICATION
+          predicates:
+            - "Path=/medications/**"
+            - "Path=/diagnoses/**"
+
+        - id: micro-patient
+          uri: lb://MICRO-PATIENT
+          predicates:
+            - "Path=/patient/**"
+
+  sleuth:
+    reactor:
+      instrumentation-type: decorate-on-each
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/

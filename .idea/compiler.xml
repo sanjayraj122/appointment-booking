@@ -8,7 +8,6 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="micro-appointment" />
-        <module name="micro-auth" />
         <module name="micro-doctor" />
         <module name="student" />
         <module name="login-logout-service" />
@@ -21,6 +20,7 @@
     <bytecodeTargetLevel>
       <module name="login-logout-service (1)" target="1.8" />
       <module name="medication" target="1.8" />
+      <module name="micro-auth" target="17" />
       <module name="micro-notification" target="1.8" />
     </bytecodeTargetLevel>
   </component>
