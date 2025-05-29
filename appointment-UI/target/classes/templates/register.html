@@ -45,10 +45,10 @@
 								<label>Enter Password</label> <input type="password"
 																	 name="password" class="form-control" required="required">
 							</div>
-							<div class="mb-3">
-								<label>Enter Referring Physician Name</label> <input type="text"
-																					 name="refferingPhysician" class="form-control" required="required">
-							</div>
+<!--							<div class="mb-3">-->
+<!--								<label>Enter Referring Physician Name</label> <input type="text"-->
+<!--																					 name="refferingPhysician" class="form-control" required="required">-->
+<!--							</div>-->
 
 							<button class="btn btn-primary col-md-12">Register</button>
 						</form>
@@ -59,6 +59,40 @@
 
 	</div>
 </section>
+document.getElementById("registrationForm").addEventListener("submit", async function (e) {
+e.preventDefault();
 
+const formData = {
+fullName: document.getElementById("fullName").value,
+email: document.getElementById("email").value,
+address: document.getElementById("address").value,
+mobileno: document.getElementById("mobileno").value,
+password: document.getElementById("password").value,
+refferingPhysician: document.getElementById("refferingPhysician").value
+};
+
+try {
+const response = await fetch("/patient/createPatient", {
+method: "POST",
+headers: {
+"Content-Type": "application/json",
+"Authorization": "Bearer " + localStorage.getItem("jwtToken")
+},
+body: JSON.stringify(formData)
+});
+
+if (!response.ok) {
+throw new Error("Registration failed");
+}
+
+const data = await response.json();
+// Handle successful registration
+window.location.href = "/patient/dashboard"; // Redirect to patient dashboard
+
+} catch (error) {
+document.getElementById("error-box").classList.remove("d-none");
+document.getElementById("error-msg").textContent = error.message;
+}
+});
 </body>
 </html>

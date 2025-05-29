@@ -19,17 +19,17 @@ public class Patient {
 
     private long mobileno;
 
-    private String refferingPhysician;
+//    private String refferingPhysician;
 
     private String role;
 
-    public String getRefferingPhysician() {
-        return refferingPhysician;
-    }
-
-    public void setRefferingPhysician(String refferingPhysician) {
-        this.refferingPhysician = refferingPhysician;
-    }
+//    public String getRefferingPhysician() {
+//        return refferingPhysician;
+//    }
+//
+//    public void setRefferingPhysician(String refferingPhysician) {
+//        this.refferingPhysician = refferingPhysician;
+//    }
 
     public long getId() {
         return id;

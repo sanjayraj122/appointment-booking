@@ -1,0 +1,50 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="VulnerableLibrariesLocal" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="isIgnoringEnabled" value="true" />
+      <option name="ignoredModules">
+        <list>
+          <option value="micro-mail" />
+          <option value="micro-mail" />
+          <option value="micro-mail" />
+          <option value="micro-mail" />
+          <option value="micro-appointment" />
+          <option value="micro-appointment" />
+          <option value="micro-appointment" />
+          <option value="micro-appointment" />
+          <option value="micro-appointment" />
+          <option value="micro-appointment" />
+        </list>
+      </option>
+      <option name="ignoredPackages">
+        <list>
+          <option value="mysql:mysql-connector-java:8.0.29" />
+          <option value="commons-fileupload:commons-fileupload:1.4" />
+          <option value="org.bouncycastle:bcprov-jdk15on:1.69" />
+          <option value="com.thoughtworks.xstream:xstream:1.4.18" />
+          <option value="mysql:mysql-connector-java:8.0.29" />
+          <option value="commons-fileupload:commons-fileupload:1.4" />
+          <option value="com.thoughtworks.xstream:xstream:1.4.18" />
+          <option value="org.bouncycastle:bcprov-jdk15on:1.69" />
+          <option value="com.jayway.jsonpath:json-path:2.7.0" />
+          <option value="net.minidev:json-smart:2.4.8" />
+        </list>
+      </option>
+      <option name="ignoredReasons">
+        <list>
+          <option value="Not exploitable" />
+          <option value="Not exploitable" />
+          <option value="Not exploitable" />
+          <option value="Not exploitable" />
+          <option value="Not exploitable" />
+          <option value="Not exploitable" />
+          <option value="Not exploitable" />
+          <option value="Not exploitable" />
+          <option value="Not exploitable" />
+          <option value="Not exploitable" />
+        </list>
+      </option>
+    </inspection_tool>
+  </profile>
+</component>
