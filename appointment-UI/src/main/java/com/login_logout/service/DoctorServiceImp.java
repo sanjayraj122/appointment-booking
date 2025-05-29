@@ -59,19 +59,19 @@ public class DoctorServiceImp implements DoctorService {
 
     @Override
     public DoctorResponse getDoctorByDID(long did) {
-        // TODO Auto-generated method stub
+
         return doctorfegin.getById(did);
     }
 
     @Override
     public DoctorResponse UpdateDoctor(DoctorResponse doctor) {
-        // TODO Auto-generated method stub
+
         return doctorfegin.UpdateDoctor(doctor, doctor.getDid());
     }
 
     @Override
     public boolean UpdateAppoStatus(long aid, int st) {
-        // TODO Auto-generated method stub
+
         doctorfegin.ChangeStatus(aid, st);
         return true;
     }

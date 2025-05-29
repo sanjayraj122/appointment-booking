@@ -28,18 +28,8 @@ public class Patient {
 	private String password;
 	private long mobileno;
 
-	public String getRefferingPhysician() {
-		return refferingPhysician;
-	}
-
-	public void setRefferingPhysician(String refferingPhysician) {
-		this.refferingPhysician = refferingPhysician;
-	}
-
-	private String refferingPhysician;
+//
 	private String role;
-
-	
 
 	public String getFullName() {
 		return fullName;

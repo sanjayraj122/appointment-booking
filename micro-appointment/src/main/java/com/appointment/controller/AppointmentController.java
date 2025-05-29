@@ -44,19 +44,79 @@ public class AppointmentController {
 
         System.out.println(appointment.toString());
         return appointment;
+
     }
 
     @PostMapping("/create")
     public AppointmentResponse CreateAppointment(@RequestBody Appointment appointment) {
+        // Create the appointment
+        AppointmentResponse response = appointmentService.CreateAppointment(appointment);
 
+        // Fetch patient and doctor info
+        PatientResponse patient = commonService.getPatientById(response.getPid());
+        DoctorResponse doctor = commonService.getDoctorById(response.getDid());
 
-        return appointmentService.CreateAppointment(appointment);
+        // Prepare email
+        MailResponse mailResponse = new MailResponse();
+        mailResponse.setEmailFrom("noReply@gmail.com");
+        mailResponse.setEmailTo(patient.getEmail());
+        mailResponse.setOwnerRef(doctor.getEmail());
+        mailResponse.setSubject("Appointment Confirmation");
+
+        String emailText = "Dear " + patient.getFullName() + ", your appointment has been successfully booked with Dr. " + doctor.getFullName() + ". Please find the appointment details below:\n\n" +
+                "Appointment ID: " + response.getAid() + "\n" +
+                "Date: " + response.getDate() + "\n" +
+                "Time: " + response.getTime() + "\n\n" +
+                "Thank you for choosing our service.";
+
+        mailResponse.setText(emailText);
+
+        // Send email
+        commonService.sendEmail(mailResponse);
+
+        return response;
     }
 
     @PutMapping("/edit/{id}")
-    public AppointmentResponse EditAppointment(@RequestBody Appointment appointment, @PathVariable long id) {
-        appointment.setAid(id);
-        return CreateAppointment(appointment);
+    public ResponseEntity<AppointmentResponse> EditAppointment(@RequestBody Appointment updatedAppointment, @PathVariable long id) {
+
+        // Fetch existing appointment
+        AppointmentResponse existingAppointment = appointmentService.getAppointmentById(id);
+
+        if (existingAppointment == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        // Update the appointment fields
+        updatedAppointment.setAid(id);
+        updatedAppointment.setDid(existingAppointment.getDid());
+        updatedAppointment.setPid(existingAppointment.getPid());
+
+        // Save updated appointment
+        AppointmentResponse response = appointmentService.CreateAppointment(updatedAppointment);
+
+        // Fetch patient and doctor info
+        PatientResponse patient = commonService.getPatientById(response.getPid());
+        DoctorResponse doctor = commonService.getDoctorById(response.getDid());
+
+        // Prepare email
+        MailResponse mailResponse = new MailResponse();
+        mailResponse.setEmailFrom("noReply@gmail.com");
+        mailResponse.setEmailTo(patient.getEmail());
+        mailResponse.setOwnerRef(doctor.getEmail());
+        mailResponse.setSubject("Appointment Updated");
+
+        String emailText = "Dear " + patient.getFullName() + ", your appointment has been updated with Dr. " + doctor.getFullName() + ". Please find the new appointment details below:\n\n" +
+                "Appointment ID: " + response.getAid() + "\n" +
+                "New Date: " + response.getDate() + "\n" +
+                "New Time: " + response.getTime() + "\n\n" +
+                "Please be on time.";
+
+        mailResponse.setText(emailText);
+
+        // Send email notification
+        commonService.sendEmail(mailResponse);
+
+        return ResponseEntity.ok(response);
 
     }
 
