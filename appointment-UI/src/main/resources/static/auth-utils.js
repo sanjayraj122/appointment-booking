@@ -1,16 +1,9 @@
 function authFetch(url, options = {}) {
-    const token = localStorage.getItem("jwtToken");
-    if (!token) {
-        window.location.href = "/signin";
-        return Promise.reject("User not authenticated");
-    }
-
+    options.credentials = "include"; // Send cookies with request
     options.headers = {
         ...options.headers,
-        "Authorization": "Bearer " + token,
         "Content-Type": "application/json"
     };
-
     return fetch(url, options);
 }
 

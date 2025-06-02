@@ -15,39 +15,39 @@ spring:
         - id: login-logout-service
           uri: lb://LOGIN-LOGOUT-SERVICE
           predicates:
-            - "Path=/login/**"
-            - "Path=/logout/**"
-            - "Path=/signin/**"
+            - Path=/login/**
+            - Path=/logout/**
+            - Path=/signin/**
           filters:
-            - "AuthenticationFilter"
+            - AuthenticationFilter
 
         - id: micro-appointment
           uri: lb://MICRO-APPOINTMENT
           predicates:
-            - "Path=/appointment/**"
+            - Path=/appointment/**
           filters:
-            - "AuthenticationFilter"
+            - AuthenticationFilter
 
         - id: micro-doctor
           uri: lb://MICRO-DOCTOR
           predicates:
-            - "Path=/doctor/**"
+            - Path=/doctor/**
 
         - id: micro-mail
           uri: lb://MICRO-MAIL
           predicates:
-            - "Path=/mail/**"
+            - Path=/mail/**
 
         - id: micro-medication
           uri: lb://MICRO-MEDICATION
           predicates:
-            - "Path=/medications/**"
-            - "Path=/diagnoses/**"
+            - Path=/medications/**
+            - Path=/diagnoses/**
 
         - id: micro-patient
           uri: lb://MICRO-PATIENT
           predicates:
-            - "Path=/patient/**"
+            - Path=/patient/**
 
   sleuth:
     reactor:

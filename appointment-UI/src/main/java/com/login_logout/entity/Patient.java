@@ -28,7 +28,6 @@ public class Patient {
 	private String password;
 	private long mobileno;
 
-//
 	private String role;
 
 	public String getFullName() {

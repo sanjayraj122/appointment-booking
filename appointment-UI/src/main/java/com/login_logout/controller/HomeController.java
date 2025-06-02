@@ -9,6 +9,7 @@ import com.login_logout.service.MedicationService;
 import com.login_logout.service.PatientService;
 import com.login_logout.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -32,6 +33,13 @@ public class HomeController {
     MedicationService medicationService;
 
 
+    @GetMapping("/loginSuccess")
+    public String loginSuccess(@AuthenticationPrincipal org.springframework.security.oauth2.core.user.OAuth2User oauthUser, HttpSession session) {
+        String name = oauthUser.getAttribute("name");
+        String email = oauthUser.getAttribute("email");
+        session.setAttribute("msg", "Welcome, " + name + " (" + email + ")");
+        return "redirect:/";
+    }
     @GetMapping("/")
     public String index() {
         return "index";

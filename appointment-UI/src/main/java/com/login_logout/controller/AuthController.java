@@ -15,11 +15,13 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.time.Duration;
 
 @RestController
@@ -34,6 +36,14 @@ public class AuthController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @GetMapping("/loginSuccess")
+    public String loginSuccess(@AuthenticationPrincipal org.springframework.security.oauth2.core.user.OAuth2User oauthUser, HttpSession session) {
+        String name = oauthUser.getAttribute("name");
+        String email = oauthUser.getAttribute("email");
+        session.setAttribute("msg", "Welcome, " + name + " (" + email + ")");
+        return "redirect:/";
+    }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody JwtRequest request, HttpServletResponse response) {

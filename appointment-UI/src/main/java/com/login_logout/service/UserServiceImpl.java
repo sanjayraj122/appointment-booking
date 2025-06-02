@@ -2,6 +2,7 @@ package com.login_logout.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Service;
 
 import com.login_logout.entity.UserDtls;
@@ -31,5 +32,10 @@ public class UserServiceImpl implements UserService {
 		return userRepo.existsByEmail(email);
 	}
 
-
+	@Override
+	public String getUserName(OAuth2AuthenticationToken authentication) {
+		if (authentication == null) return null;
+		Object name = authentication.getPrincipal().getAttributes().get("email");
+		return name != null ? name.toString() : null;
+	}
 }

@@ -19,15 +19,14 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 			Authentication authentication) throws IOException, ServletException {
 	Set<String>	roles = AuthorityUtils.authorityListToSet(authentication.getAuthorities());
-		if(roles.contains("ROLE_ADMIN")) {
-			response.sendRedirect("/admin/");
+		if(roles.contains("ROLE_DOCTOR")) {
+			response.sendRedirect("/doctor/");
 		}
 		else if (roles.contains("ROLE_PATIENT")) {
 			response.sendRedirect("/patient/");
 
-		}
-		else {
-			response.sendRedirect("/doctor/");
+		}else {
+			response.sendRedirect("/");
 		}
 	}
 }
