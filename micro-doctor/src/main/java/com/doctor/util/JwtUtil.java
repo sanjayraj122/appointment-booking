@@ -1,4 +1,4 @@
-package com.gateway.util;
+package com.doctor.util;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -20,27 +20,26 @@ import java.util.function.Function;
 public class JwtUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(JwtUtil.class);
+    
+    // Same secret as the API Gateway and UI service
     public static final String SECRET = "5367566B59703373367639792F423F4528482B4D6251655468576D5A71347437";
 
-    public void validateToken(final String token) {
+    public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder().setSigningKey(getSignKey()).build().parseClaimsJws(token);
+            return !isTokenExpired(token);
         } catch (SignatureException e) {
             logger.error("Invalid JWT signature: {}", e.getMessage());
-            throw new RuntimeException("Invalid JWT signature");
         } catch (MalformedJwtException e) {
             logger.error("Invalid JWT token: {}", e.getMessage());
-            throw new RuntimeException("Invalid JWT token");
         } catch (ExpiredJwtException e) {
             logger.error("JWT token is expired: {}", e.getMessage());
-            throw new RuntimeException("JWT token is expired");
         } catch (UnsupportedJwtException e) {
             logger.error("JWT token is unsupported: {}", e.getMessage());
-            throw new RuntimeException("JWT token is unsupported");
         } catch (IllegalArgumentException e) {
             logger.error("JWT claims string is empty: {}", e.getMessage());
-            throw new RuntimeException("JWT claims string is empty");
         }
+        return false;
     }
 
     public String extractUsername(String token) {
@@ -70,16 +69,6 @@ public class JwtUtil {
 
     public Boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
-    }
-
-    public Boolean validateTokenDetails(String token) {
-        try {
-            validateToken(token);
-            return !isTokenExpired(token);
-        } catch (Exception e) {
-            logger.error("Token validation failed: {}", e.getMessage());
-            return false;
-        }
     }
 
     private Key getSignKey() {

@@ -28,6 +28,11 @@ public class PatientService {
         return new PatientResponse(patient);
     }
 
+    public long getPatientIdByEmail(String email) {
+        Patient patient = patientRepo.findByEmail(email);
+        return patient != null ? patient.getId() : -1;
+    }
+
     //To create the new Patient
     public Patient createUser(Patient patient) {
         patient.setPassword(passwordEncode.encode(patient.getPassword()));
