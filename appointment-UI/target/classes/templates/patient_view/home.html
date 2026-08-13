@@ -1,105 +1,443 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="ISO-8859-1">
-    <title>Patient Profile</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Dashboard - MediCare</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/modern-style.css">
+    
     <style>
-        .panel {
-            border-radius: 0;
-            transition: box-shadow 0.5s;
+        .patient-dashboard {
+            min-height: 100vh;
+            background: #f9fafb;
+            padding-top: 2rem;
+            padding-bottom: 2rem;
         }
 
-        .panel-heading {
-            color: #fff !important;
-            background-color: #0064FF !important;
-            padding: 20px;
-            border-bottom: 1px solid transparent;
-            border-top-left-radius: 0px;
-            border-top-right-radius: 0px;
-            border-bottom-left-radius: 0px;
-            border-bottom-right-radius: 0px;
+        .dashboard-header {
+            background: linear-gradient(135deg, #0064FF 0%, #0050CC 100%);
+            color: #fff;
+            padding: 3rem 2rem;
+            border-radius: 1.5rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 10px 30px rgba(0, 100, 255, 0.2);
         }
 
-        .profile-pic {
+        .dashboard-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .dashboard-subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin-bottom: 0;
+        }
+
+        .profile-sidebar {
+            background: #fff;
+            border-radius: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            position: sticky;
+            top: 120px;
+        }
+
+        .profile-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 2px solid #E5E7EB;
+        }
+
+        .profile-avatar {
             width: 100px;
             height: 100px;
             border-radius: 50%;
-            margin: 20px;
+            background: linear-gradient(135deg, #0064FF 0%, #0050CC 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            color: #fff;
+            font-size: 2.5rem;
+            box-shadow: 0 4px 15px rgba(0, 100, 255, 0.3);
         }
 
-        .user-details {
-            padding: 20px;
-            text-align: center; /* added this line to center the text */
+        .profile-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #0F172A;
+            margin-bottom: 0.5rem;
         }
 
-        .user-details h4 {
-            margin-top: 0;
+        .profile-status {
+            font-size: 0.85rem;
+            color: #10B981;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.35rem;
         }
 
-        .edit-btn {
-            margin-top: 20px;
+        .profile-details {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #F3F4F6;
+        }
+
+        .detail-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .detail-icon {
+            color: #0064FF;
+            font-size: 1.1rem;
+            margin-top: 0.2rem;
+        }
+
+        .detail-content {
+            flex: 1;
+        }
+
+        .detail-label {
+            font-size: 0.75rem;
+            color: #9CA3AF;
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            letter-spacing: 0.5px;
+        }
+
+        .detail-value {
+            font-size: 0.95rem;
+            color: #0F172A;
+            font-weight: 500;
+        }
+
+        .edit-profile-btn {
+            width: 100%;
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, #0064FF 0%, #0050CC 100%);
+            color: #fff;
+            border: none;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            transition: all 300ms ease;
+            cursor: pointer;
+            margin-top: 1rem;
+            box-shadow: 0 4px 15px rgba(0, 100, 255, 0.3);
+        }
+
+        .edit-profile-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 100, 255, 0.4);
+        }
+
+        .welcome-section {
+            background: #fff;
+            border-radius: 1.5rem;
+            padding: 3rem 2rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 3rem;
+        }
+
+        .welcome-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #0F172A;
+            margin-bottom: 1rem;
+        }
+
+        .welcome-text {
+            font-size: 1rem;
+            color: #6B7280;
+            line-height: 1.6;
+        }
+
+        .action-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .action-card {
+            background: linear-gradient(135deg, #f0f4ff 0%, #f9f5ff 100%);
+            padding: 1.5rem;
+            border-radius: 1rem;
+            text-decoration: none;
+            color: #0F172A;
+            transition: all 300ms ease;
+            border: 2px solid #E5E7EB;
+            text-align: center;
+        }
+
+        .action-card:hover {
+            transform: translateY(-4px);
+            border-color: #0064FF;
+            box-shadow: 0 10px 30px rgba(0, 100, 255, 0.15);
+        }
+
+        .action-card-icon {
+            font-size: 2rem;
+            color: #0064FF;
+            margin-bottom: 0.75rem;
+        }
+
+        .action-card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .action-card-desc {
+            font-size: 0.85rem;
+            color: #6B7280;
+        }
+
+        .update-message {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%);
+            border-left: 4px solid #10B981;
+            padding: 1rem 1.5rem;
+            border-radius: 0.75rem;
+            margin-bottom: 1.5rem;
+            color: #047857;
+            font-weight: 500;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, #0064FF 0%, #0050CC 100%) !important;
+            box-shadow: 0 4px 15px rgba(0, 100, 255, 0.2);
+        }
+
+        .navbar-brand {
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        .nav-link {
+            font-weight: 500;
+            transition: all 200ms ease;
+        }
+
+        .nav-link:hover {
+            color: rgba(255, 255, 255, 0.8) !important;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-header {
+                padding: 2rem 1.5rem;
+            }
+
+            .dashboard-title {
+                font-size: 1.5rem;
+            }
+
+            .profile-sidebar {
+                position: relative;
+                top: 0;
+            }
+
+            .action-buttons {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
-
 <body>
-<nav class="navbar navbar-expand-lg py-4 navbar-dark bg-primary">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="#">Appointment Management</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item"><a class="nav-link active" aria-current="page" href="/patient/">Home</a></li>
-                <li class="nav-item"><a class="nav-link" th:href="@{/patient/appointments/{pid} (pid=${patient.id})}" >View Appointments</a></li>
-                <li class="nav-item"><a class="nav-link" href="/patient/doctors">View Doctors</a></li>
-<!--
-                <li class="nav-item"><a class="nav-link" href="/patient/setAlert">Alert Schedule</a></li>
--->
 
-            </ul>
-            <span class="navbar-text"><span class="glyphicon glyphicon-log-out"><a class="btn btn-danger" href="/logout" role="button">  Logout</a> </span>  </span>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand d-flex align-items-center gap-2" href="/">
+                <i class="bi bi-hospital"></i>
+                <span>MediCare</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/patient/">
+                            <i class="bi bi-house"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/patient/appointments/{pid} (pid=${patient.id})}">
+                            <i class="bi bi-calendar-check"></i> My Appointments
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/patient/doctors">
+                            <i class="bi bi-stethoscope"></i> Find Doctors
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-danger btn-sm text-white ms-2" href="/logout">
+                            <i class="bi bi-box-arrow-left"></i> Logout
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </div>
-    </div>
-</nav>
+    </nav>
 
-<div class="container-fluid text-center" style="padding-top: 2%;">
-    <div class="row content">
-        <div class="col-sm-2 sidenav">
+    <!-- Main Content -->
+    <div class="patient-dashboard">
+        <div class="container-fluid">
+
+            <!-- Dashboard Header -->
+            <div class="dashboard-header">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h1 class="dashboard-title">Welcome, [[${patient.fullName}]]! 👋</h1>
+                        <p class="dashboard-subtitle">Manage your medical appointments with ease</p>
+                    </div>
+                    <div class="col-md-4 text-end d-none d-md-block">
+                        <i class="bi bi-heart-pulse" style="font-size: 3rem; opacity: 0.3;"></i>
+                    </div>
+                </div>
+            </div>
+
             <div class="row">
-                <div class="col">
-                    <div class="panel panel-default" align="left">
-                        <div class="panel-heading" align="center">
-                            <h2>Profile</h2>
+                <!-- Sidebar - Profile -->
+                <div class="col-lg-3">
+                    <div class="profile-sidebar">
+                        <div class="profile-header">
+                            <div class="profile-avatar">
+                                <i class="bi bi-person-fill"></i>
+                            </div>
+                            <h3 class="profile-name">[[${patient.fullName}]]</h3>
+                            <div class="profile-status">
+                                <i class="bi bi-check-circle-fill"></i> Active
+                            </div>
                         </div>
+
+                        <div class="profile-details">
+                            <div class="detail-item">
+                                <div class="detail-icon">
+                                    <i class="bi bi-envelope"></i>
+                                </div>
+                                <div class="detail-content">
+                                    <div class="detail-label">Email</div>
+                                    <div class="detail-value">[[${patient.email}]]</div>
+                                </div>
+                            </div>
+
+                            <div class="detail-item">
+                                <div class="detail-icon">
+                                    <i class="bi bi-telephone"></i>
+                                </div>
+                                <div class="detail-content">
+                                    <div class="detail-label">Phone</div>
+                                    <div class="detail-value">[[${patient.mobileno}]]</div>
+                                </div>
+                            </div>
+
+                            <div class="detail-item">
+                                <div class="detail-icon">
+                                    <i class="bi bi-geo-alt"></i>
+                                </div>
+                                <div class="detail-content">
+                                    <div class="detail-label">Address</div>
+                                    <div class="detail-value">[[${patient.address}]]</div>
+                                </div>
+                            </div>
+
+                            <div class="detail-item">
+                                <div class="detail-icon">
+                                    <i class="bi bi-person-workspace"></i>
+                                </div>
+                                <div class="detail-content">
+                                    <div class="detail-label">Referring Physician</div>
+                                    <div class="detail-value">[[${patient.refferingPhysician}]]</div>
+                                </div>
+                            </div>
+                        </div>
+
                         <th:block th:if="${session.profile_updated}">
-                            <p class="text-center fs-4 text-success">[[${session.profile_updated}]]</p>
-                            <th:block th:text="${#session.removeAttribute('profile_updated')}"></th:block>
+                            <div class="update-message mt-3">
+                                <i class="bi bi-check-circle"></i> [[${session.profile_updated}]]
+                                <th:block th:text="${#session.removeAttribute('profile_updated')}"></th:block>
+                            </div>
                         </th:block>
-                        <div class="panel-body" style="padding-left: 15%;">
-                            <div class="user-details">
-                                <h4>User Details</h4>
-                                <p><strong> [[${patient.fullName}]]</strong></p>
-                                <p><strong> [[${patient.email}]]</strong></p>
-                                <p><strong>[[${patient.mobileno}]]</strong></p>
-                                <p><strong>[[${patient.address}]]</strong></p>
-                            </div>
-                            <div class="edit-btn">
-                                <span class="navbar-text"><a class="btn btn-primary" th:href="@{/patient/profile/{id} (id=${patient.id})}" role="button">  Edit</a> </span>
-                            </div>
+
+                        <button class="edit-profile-btn" onclick="window.location.href='/patient/profile/' + getPatientId();">
+                            <i class="bi bi-pencil-square"></i> Edit Profile
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Main Content Area -->
+                <div class="col-lg-9">
+                    <!-- Welcome Section -->
+                    <div class="welcome-section">
+                        <h2 class="welcome-title">Your Health Journey Starts Here</h2>
+                        <p class="welcome-text">
+                            Welcome to MediCare, your personal healthcare management platform. Schedule appointments with doctors, 
+                            view your medical history, and manage your health all in one place.
+                        </p>
+
+                        <!-- Action Buttons -->
+                        <div class="action-buttons">
+                            <a href="/patient/doctors" class="action-card">
+                                <div class="action-card-icon">
+                                    <i class="bi bi-search"></i>
+                                </div>
+                                <div class="action-card-title">Find Doctors</div>
+                                <div class="action-card-desc">Search and book appointments</div>
+                            </a>
+
+                            <a th:href="@{/patient/appointments/{pid} (pid=${patient.id})}" class="action-card">
+                                <div class="action-card-icon">
+                                    <i class="bi bi-calendar-event"></i>
+                                </div>
+                                <div class="action-card-title">My Appointments</div>
+                                <div class="action-card-desc">View upcoming appointments</div>
+                            </a>
+
+                            <a href="/patient/profile/" class="action-card">
+                                <div class="action-card-icon">
+                                    <i class="bi bi-person-check"></i>
+                                </div>
+                                <div class="action-card-title">My Profile</div>
+                                <div class="action-card-desc">Update medical information</div>
+                            </a>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col-sm-8 text-left">
-            <h1>Welcome</h1>
 
         </div>
     </div>
-</div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        function getPatientId() {
+            // This would come from the patient object
+            const url = new URL(window.location);
+            return url.pathname.includes('patient') ? document.querySelector('.navbar-nav a').href.split('/').pop() : '';
+        }
+    </script>
 
 </body>
 </html>
